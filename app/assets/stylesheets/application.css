@@ -1,0 +1,139 @@
+/*
+ * This is a manifest file that'll be compiled into application.css.
+ *
+ * With Propshaft, assets are served efficiently without preprocessing steps. You can still include
+ * application-wide styles in this file, but keep in mind that CSS precedence will follow the standard
+ * cascading order, meaning styles declared later in the document or manifest will override earlier ones,
+ * depending on specificity.
+ *
+ * Consider organizing styles into separate files for maintainability.
+ */
+
+/* ---- Admin sidebar styles (theme using #2E7D32 / #43A047) ---- */
+:root {
+	--green-700: #2E7D32; /* primary dark */
+	--green-600: #43A047; /* primary light */
+	--green-500: #66BB6A;
+	--sidebar-width: 240px;
+}
+
+.admin-sidebar {
+	position: fixed;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	width: var(--sidebar-width);
+	background: linear-gradient(180deg, var(--green-700), var(--green-600));
+	color: #fff;
+	display: flex;
+	flex-direction: column;
+	padding: 1rem 0.75rem;
+	box-shadow: 2px 0 12px rgba(46,125,50,0.12);
+	z-index: 30;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+.admin-sidebar .brand {
+	display: flex;
+	align-items: center;
+	padding: 0 0.5rem 1rem;
+	margin-bottom: 0.25rem;
+}
+
+.brand-link { color: #fff; text-decoration: none; display: flex; align-items: center; }
+.brand-logo { font-size: 1.35rem; margin-right: 0.5rem; }
+.brand-text { font-weight: 700; font-size: 1.05rem; }
+
+.nav-section { flex: 1 1 auto; overflow: auto; padding-top: 0.5rem; }
+.nav-list { list-style: none; margin: 0; padding: 0; }
+.nav-item { margin: 0.15rem 0; }
+.nav-link {
+	display: block;
+	padding: 0.6rem 0.6rem;
+	color: #fff;
+	text-decoration: none;
+	border-radius: 6px;
+	transition: background-color 150ms ease, transform 100ms ease;
+}
+.nav-link:hover { background: rgba(255,255,255,0.06); transform: translateX(4px); }
+.nav-link:active { transform: translateX(2px); }
+.nav-link.logout { margin-top: auto; padding: 0.5rem 0.6rem; color: #fff; display: inline-block; }
+
+/* Optional small-screen behaviour: collapse sidebar space for content */
+@media (max-width: 900px) {
+	.admin-sidebar { position: relative; width: 100%; height: auto; box-shadow: none; flex-direction: row; align-items: center; padding: .5rem; }
+	.nav-section { display: none; }
+	.brand-text { display: inline-block; }
+}
+
+/* Add left padding to main content if you have a fixed sidebar */
+/* Keep legacy rule for older styles removed in favor of main-content margin */
+/* body { padding-left: var(--sidebar-width); } */
+
+/* Move main content to the right so fixed sidebar doesn't overlap it */
+.main-content {
+	margin-left: 280px; /* match sidebar width */
+	transition: margin-left 200ms ease;
+	padding: 1rem;
+}
+
+@media (max-width: 900px) {
+	.main-content { margin-left: 0; }
+}
+
+/* Keep legacy rules last to avoid accidental overrides */
+
+/* ---- Dashboard styles (moved from view) ---- */
+.admin-dashboard { padding: 1.5rem; max-width: 1100px; margin: 0 auto; }
+.dashboard-header h1 { margin: 0 0 .25rem; color: var(--green-700); }
+.muted { color: rgba(0,0,0,0.55); }
+
+.stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; margin-top: 1rem; }
+.stat-card { padding: 1rem; border-radius: 8px; color: #062; background-clip: padding-box; box-shadow: 0 6px 18px rgba(46,125,50,0.04); }
+.stat-value { font-size: 1.6rem; font-weight: 700; margin-bottom: .25rem; color: var(--green-700); }
+.stat-label { font-size: .9rem; opacity: .95 }
+
+.summary-cards { display: flex; gap: 1rem; margin: 1.25rem 0; }
+.summary-card { flex: 1; background: #fff; padding: 1rem; border-radius: 8px; box-shadow: 0 6px 18px rgba(46,125,50,0.06); }
+.summary-card h3 { margin: 0 0 .5rem; color: var(--green-700); }
+.summary-value { font-weight: 700; font-size: 1.25rem; }
+
+.recent-activity { margin-top: 1rem; }
+.recent-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 6px; overflow: hidden; }
+.recent-table th, .recent-table td { padding: .6rem .75rem; text-align: left; border-bottom: 1px solid #eee; }
+.recent-table thead { background: linear-gradient(90deg, var(--green-700), var(--green-600)); color: #fff; font-weight: 600; }
+
+/* Color accents for stat cards (subtle variations) */
+.stat-clients { background: linear-gradient(180deg, rgba(67,160,71,0.14), rgba(67,160,71,0.06)); color: #023; }
+.stat-agents  { background: linear-gradient(180deg, rgba(66,165,66,0.12), rgba(66,165,66,0.04)); color: #023; }
+.stat-etabs   { background: linear-gradient(180deg, rgba(56,142,60,0.12), rgba(56,142,60,0.04)); color: #023; }
+.stat-transactions { background: linear-gradient(180deg, rgba(46,125,50,0.12), rgba(46,125,50,0.04)); color: #023; }
+
+@media (max-width: 900px) {
+	.stats-grid { grid-template-columns: repeat(2,1fr); }
+	.summary-cards { flex-direction: column; }
+	body { padding-left: 0; }
+}
+
+/* Clients index table styles */
+.clients-index .index-actions .btn { font-weight: 600; }
+.clients-table { width: 100%; border-collapse: collapse; }
+.clients-table th, .clients-table td { padding: .6rem .75rem; border-bottom: 1px solid #eee; }
+.clients-table thead { background: linear-gradient(90deg, var(--green-700), var(--green-600)); color: #fff; }
+.clients-table tbody tr:hover { background: rgba(66,165,66,0.04); }
+.clients-table .actions { white-space: nowrap; }
+
+.table-responsive { overflow-x: auto; }
+
+/* Client form styles */
+.client-form { max-width: 720px; background: #fff; padding: 1rem; border-radius: 8px; box-shadow: 0 8px 20px rgba(46,125,50,0.04); }
+.client-form .form-row { display: flex; flex-direction: column; margin-bottom: .75rem; }
+.form-label { font-weight: 600; margin-bottom: .35rem; color: #233; }
+.form-input { padding: .5rem .6rem; border: 1px solid #ddd; border-radius: 6px; }
+.form-actions { display:flex; gap:.5rem; align-items:center; margin-top: .75rem; }
+.btn { padding: .45rem .7rem; border-radius: 6px; text-decoration: none; cursor: pointer; }
+.btn-primary { background: var(--green-700); color: #fff; border: none; }
+.btn-secondary { background: transparent; color: var(--green-700); border: 1px solid rgba(46,125,50,0.12); }
+.form-errors { background: #fff6f6; border-left: 4px solid #b71c1c; padding: .5rem .75rem; margin-bottom: .75rem; border-radius: 4px; }
+
+

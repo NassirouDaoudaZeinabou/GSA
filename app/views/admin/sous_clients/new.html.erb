@@ -1,0 +1,10 @@
+<section class="sous-clients-new admin-dashboard">
+  <header class="dashboard-header">
+    <h1>Nouveau sous-client</h1>
+    <p class="muted">Ajouter un sous-client pour l'agent <%= @agent.nom %></p>
+  </header>
+
+  <div style="margin-top:1rem">
+    <%= render 'form', sous_client: @sous_client %>
+  </div>
+</section>

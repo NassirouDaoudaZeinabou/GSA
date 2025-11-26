@@ -1,0 +1,29 @@
+                                       List of databases
+             Name             |  Owner   | Encoding | Collate |  Ctype  |   Access privileges   
+------------------------------+----------+----------+---------+---------+-----------------------
+ academia_development         | zeinabou | UTF8     | C.UTF-8 | C.UTF-8 | 
+ academia_test                | zeinabou | UTF8     | C.UTF-8 | C.UTF-8 | 
+ bani_fonda_development       | zeinabou | UTF8     | C.UTF-8 | C.UTF-8 | 
+ bani_fonda_test              | zeinabou | UTF8     | C.UTF-8 | C.UTF-8 | 
+ bourse_radar_development     | postgres | UTF8     | C.UTF-8 | C.UTF-8 | 
+ bourse_radar_test            | postgres | UTF8     | C.UTF-8 | C.UTF-8 | 
+ etresor_development          | postgres | UTF8     | C.UTF-8 | C.UTF-8 | 
+ gsa_development              | zeinabou | UTF8     | C.UTF-8 | C.UTF-8 | 
+ gsa_test                     | zeinabou | UTF8     | C.UTF-8 | C.UTF-8 | 
+ i_medical_development        | zeinabou | UTF8     | C.UTF-8 | C.UTF-8 | 
+ mena_vote_development        | zeinabou | UTF8     | C.UTF-8 | C.UTF-8 | 
+ mena_vote_test               | zeinabou | UTF8     | C.UTF-8 | C.UTF-8 | 
+ mine_permit_development      | zeinabou | UTF8     | C.UTF-8 | C.UTF-8 | 
+ mine_permit_test             | zeinabou | UTF8     | C.UTF-8 | C.UTF-8 | 
+ portail_boursier_development | postgres | UTF8     | C.UTF-8 | C.UTF-8 | 
+ portail_boursier_test        | postgres | UTF8     | C.UTF-8 | C.UTF-8 | 
+ postgres                     | postgres | UTF8     | C.UTF-8 | C.UTF-8 | 
+ saraounia_development        | postgres | UTF8     | C.UTF-8 | C.UTF-8 | 
+ saraounia_test               | postgres | UTF8     | C.UTF-8 | C.UTF-8 | 
+ template0                    | postgres | UTF8     | C.UTF-8 | C.UTF-8 | =c/postgres          +
+                              |          |          |         |         | postgres=CTc/postgres
+ template1                    | postgres | UTF8     | C.UTF-8 | C.UTF-8 | =c/postgres          +
+                              |          |          |         |         | postgres=CTc/postgres
+ university_sgi_development   | zeinabou | UTF8     | C.UTF-8 | C.UTF-8 | 
+(22 rows)
+

@@ -1,0 +1,238 @@
+<% agent = local_assigns[:agent] || @agent %>
+
+<% if agent.nil? %>
+  <div class="alert alert-warning">
+    <p>Aucun agent fourni au formulaire.</p>
+  </div>
+<% else %>
+  <% if agent.errors.any? %>
+    <div class="alert alert-danger">
+      <h4 class="alert-heading">
+        <%= pluralize(agent.errors.count, "erreur") %> <%= agent.errors.count > 1 ? "empêchent" : "empêche" %> la sauvegarde
+      </h4>
+      <ul class="error-list">
+        <% agent.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form_with(model: [:admin, @client || agent.client, agent], local: true, html: { class: 'agent-form' }) do |f| %>
+    <div class="form-grid">
+      <div class="form-group">
+        <%= f.label :nom, 'Nom', class: 'form-label required' %>
+        <%= f.text_field :nom, class: 'form-control', placeholder: 'Entrez le nom', required: true %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :prenom, 'Prénom', class: 'form-label required' %>
+        <%= f.text_field :prenom, class: 'form-control', placeholder: 'Entrez le prénom', required: true %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :matricule, 'Matricule', class: 'form-label required' %>
+        <%= f.text_field :matricule, class: 'form-control', placeholder: 'Entrez le matricule', required: true %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :budget_sante, 'Budget santé (FCFA)', class: 'form-label' %>
+        <div class="input-group">
+          <%= f.number_field :budget_sante, step: '0.01', min: '0', class: 'form-control', placeholder: '0.00' %>
+          <span class="input-suffix">FCFA</span>
+        </div>
+      </div>
+
+      <%# Sélecteur de client conditionnel %>
+      <% if @client.present? %>
+        <%= f.hidden_field :client_id, value: @client.id %>
+        <div class="form-group">
+          <%= label_tag :client_display, 'Client', class: 'form-label' %>
+          <input type="text" value="<%= @client.nom %>" class="form-control" disabled>
+        </div>
+      <% else %>
+        <div class="form-group">
+          <%= f.label :client_id, 'Client', class: 'form-label required' %>
+          <%= f.collection_select :client_id, 
+                                  Client.all.order(:nom), 
+                                  :id, 
+                                  :nom, 
+                                  { prompt: 'Sélectionner un client' }, 
+                                  { class: 'form-control', required: true } %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="form-actions">
+      <%= f.submit agent.persisted? ? 'Mettre à jour l\'agent' : 'Créer l\'agent', 
+                   class: 'btn btn-primary' %>
+      <%= link_to 'Annuler', 
+                  (agent.client || @client).present? ? admin_client_path(agent.client || @client) : admin_clients_path, 
+                  class: 'btn btn-secondary' %>
+    </div>
+  <% end %>
+<% end %>
+
+<style>
+.alert {
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.alert-warning {
+  background-color: #fff3cd;
+  border: 1px solid #ffc107;
+  color: #856404;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  border: 1px solid #dc3545;
+  color: #721c24;
+}
+
+.alert-heading {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.error-list {
+  margin: 0.5rem 0 0 1.25rem;
+  padding: 0;
+}
+
+.error-list li {
+  margin-bottom: 0.25rem;
+}
+
+.agent-form {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.form-label.required::after {
+  content: ' *';
+  color: #dc3545;
+}
+
+.form-control {
+  padding: 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+}
+
+.form-control:disabled {
+  background-color: #e9ecef;
+  cursor: not-allowed;
+}
+
+.input-group {
+  position: relative;
+  display: flex;
+}
+
+.input-suffix {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6c757d;
+  font-size: 0.9rem;
+  pointer-events: none;
+}
+
+.input-group .form-control {
+  padding-right: 4rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0,123,255,0.3);
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #545b62;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(108,117,125,0.3);
+}
+
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .agent-form {
+    padding: 1.5rem;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .btn {
+    width: 100%;
+  }
+}
+</style>

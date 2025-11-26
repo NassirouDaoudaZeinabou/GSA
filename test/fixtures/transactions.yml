@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  montant: 9.99
+  type_transaction: MyString
+  date: 2025-11-18
+  agent: one
+  sous_client: one
+  etablissement: one
+
+two:
+  montant: 9.99
+  type_transaction: MyString
+  date: 2025-11-18
+  agent: two
+  sous_client: two
+  etablissement: two

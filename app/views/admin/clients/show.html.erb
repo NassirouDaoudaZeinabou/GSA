@@ -1,0 +1,110 @@
+<section class="client-show admin-dashboard" style="max-width:1400px;margin:0 auto;padding:2rem;">
+  <!-- En-tête -->
+  <header class="dashboard-header" style="margin-bottom:2rem;">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+      <div>
+        <h1 style="margin:0 0 0.5rem 0;font-size:2rem;color:#212529;font-weight:600;">
+          <%= @client.nom.presence || 'Client' %>
+        </h1>
+        <p class="muted" style="margin:0;color:#6c757d;font-size:0.95rem;">Détail du client et agents associés</p>
+      </div>
+      <div style="display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap;">
+        <a href="<%= edit_admin_client_path(@client) %>" style="background:linear-gradient(135deg, #0066cc 0%, #0052a3 100%);color:#fff;padding:0.65rem 1.25rem;border-radius:8px;text-decoration:none;font-weight:500;box-shadow:0 2px 8px rgba(0,102,204,0.2);transition:all 0.3s ease;display:inline-flex;align-items:center;gap:0.5rem;font-size:0.9rem;">
+          ✏️ Éditer
+        </a>
+        <form action="<%= admin_client_path(@client) %>" method="post" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce client et tous ses agents ?')">
+          <input type="hidden" name="_method" value="delete" />
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>" />
+          <button type="submit" style="background:linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);color:#fff;padding:0.65rem 1.25rem;border-radius:8px;border:0;font-weight:500;cursor:pointer;box-shadow:0 2px 8px rgba(211,47,47,0.2);transition:all 0.3s ease;display:inline-flex;align-items:center;gap:0.5rem;font-size:0.9rem;">
+            🗑️ Supprimer
+          </button>
+        </form>
+        <a href="<%= admin_clients_path %>" style="background:#f8f9fa;color:#495057;padding:0.65rem 1.25rem;border-radius:8px;text-decoration:none;font-weight:500;transition:all 0.3s ease;display:inline-flex;align-items:center;gap:0.5rem;font-size:0.9rem;border:1px solid #dee2e6;" onmouseover="this.style.backgroundColor='#e9ecef'" onmouseout="this.style.backgroundColor='#f8f9fa'">
+          ← Retour
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Carte d'informations -->
+  <div style="background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,0.08);padding:2rem;margin-bottom:2rem;">
+    <h2 style="margin:0 0 1.5rem 0;font-size:1.3rem;color:#212529;font-weight:600;padding-bottom:0.75rem;border-bottom:2px solid #e9ecef;">
+      📋 Informations
+    </h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));gap:1.5rem;">
+      <div style="padding:1rem;background:#f8f9fa;border-radius:8px;border-left:4px solid var(--green-600);">
+        <div style="font-size:0.8rem;color:#6c757d;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;font-weight:600;">Nom</div>
+        <div style="font-size:1.1rem;color:#212529;font-weight:500;"><%= @client.nom.presence || '-' %></div>
+      </div>
+      <div style="padding:1rem;background:#f8f9fa;border-radius:8px;border-left:4px solid #0066cc;">
+        <div style="font-size:0.8rem;color:#6c757d;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;font-weight:600;">Adresse</div>
+        <div style="font-size:1.1rem;color:#212529;font-weight:500;"><%= @client.adresse.presence || '-' %></div>
+      </div>
+      <div style="padding:1rem;background:#f8f9fa;border-radius:8px;border-left:4px solid #ff9800;">
+        <div style="font-size:0.8rem;color:#6c757d;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;font-weight:600;">Budget total</div>
+        <div style="font-size:1.3rem;color:#212529;font-weight:600;"><%= number_to_currency(@client.budget_total_alloue || 0, unit: "€") %></div>
+      </div>
+      <div style="padding:1rem;background:#f8f9fa;border-radius:8px;border-left:4px solid #9c27b0;">
+        <div style="font-size:0.8rem;color:#6c757d;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;font-weight:600;">Agents</div>
+        <div style="font-size:1.3rem;color:#212529;font-weight:600;"><%= @client.agents.count %></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section Agents -->
+  <div style="background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,0.08);padding:2rem;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+      <h2 style="margin:0;font-size:1.3rem;color:#212529;font-weight:600;">
+        👥 Agents (<%= @agents.count %>)
+      </h2>
+      <a href="<%= new_admin_client_agent_path(@client) %>" style="background:linear-gradient(135deg, var(--green-700) 0%, var(--green-600) 100%);color:#fff;padding:0.65rem 1.25rem;border-radius:8px;text-decoration:none;font-weight:500;box-shadow:0 2px 8px rgba(0,128,0,0.2);transition:all 0.3s ease;display:inline-flex;align-items:center;gap:0.5rem;font-size:0.9rem;">
+        <span style="font-size:1.1rem;">+</span> Ajouter un agent
+      </a>
+    </div>
+
+    <% if @agents.any? %>
+      <div class="table-responsive" style="border-radius:8px;overflow:hidden;border:1px solid #e9ecef;">
+        <table class="agents-table" style="width:100%;border-collapse:collapse;">
+          <thead>
+            <tr style="background:linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+              <th style="padding:1rem 1.25rem;text-align:left;font-weight:600;color:#495057;font-size:0.875rem;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #dee2e6;">Nom</th>
+              <th style="padding:1rem 1.25rem;text-align:left;font-weight:600;color:#495057;font-size:0.875rem;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #dee2e6;">Prénom</th>
+              <th style="padding:1rem 1.25rem;text-align:left;font-weight:600;color:#495057;font-size:0.875rem;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #dee2e6;">Matricule</th>
+              <th style="padding:1rem 1.25rem;text-align:left;font-weight:600;color:#495057;font-size:0.875rem;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #dee2e6;">Budget santé</th>
+              <th style="padding:1rem 1.25rem;text-align:right;font-weight:600;color:#495057;font-size:0.875rem;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #dee2e6;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @agents.each do |a| %>
+              <tr style="border-bottom:1px solid #f0f0f0;transition:all 0.2s ease;" onmouseover="this.style.backgroundColor='#f8fdf9'" onmouseout="this.style.backgroundColor='transparent'">
+                <td style="padding:1rem 1.25rem;color:#212529;font-weight:500;"><%= a.nom.presence || '-' %></td>
+                <td style="padding:1rem 1.25rem;color:#212529;font-weight:500;"><%= a.prenom.presence || '-' %></td>
+                <td style="padding:1rem 1.25rem;">
+                  <span style="background:#e3f2fd;color:#0066cc;padding:0.35rem 0.75rem;border-radius:6px;font-size:0.85rem;font-weight:500;font-family:monospace;"><%= a.matricule.presence || '-' %></span>
+                </td>
+                <td style="padding:1rem 1.25rem;color:#212529;font-weight:500;font-size:1.05rem;"><%= number_to_currency(a.budget_sante || 0, unit: "€") %></td>
+                <td class="actions" style="padding:1rem 1.25rem;text-align:right;">
+                  <div style="display:inline-flex;gap:0.5rem;align-items:center;">
+                    <a href="<%= admin_client_agent_path(@client, a) %>" style="color:var(--green-700);text-decoration:none;padding:0.4rem 0.75rem;border-radius:6px;font-size:0.875rem;font-weight:500;transition:all 0.2s ease;" onmouseover="this.style.backgroundColor='#e8f5e9'" onmouseout="this.style.backgroundColor='transparent'">Voir</a>
+                    <a href="<%= edit_admin_client_agent_path(@client, a) %>" style="color:#0066cc;text-decoration:none;padding:0.4rem 0.75rem;border-radius:6px;font-size:0.875rem;font-weight:500;transition:all 0.2s ease;" onmouseover="this.style.backgroundColor='#e3f2fd'" onmouseout="this.style.backgroundColor='transparent'">Éditer</a>
+                    <form action="<%= admin_client_agent_path(@client, a) %>" method="post" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet agent ?')">
+                      <input type="hidden" name="_method" value="delete" />
+                      <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>" />
+                      <button type="submit" style="color:#d32f2f;background:none;border:0;cursor:pointer;padding:0.4rem 0.75rem;border-radius:6px;font-size:0.875rem;font-weight:500;transition:all 0.2s ease;" onmouseover="this.style.backgroundColor='#ffebee'" onmouseout="this.style.backgroundColor='transparent'">Suppr</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <div style="background:#f8f9fa;border-radius:8px;padding:3rem;text-align:center;border:2px dashed #dee2e6;">
+        <div style="font-size:3rem;margin-bottom:1rem;opacity:0.5;">👤</div>
+        <p style="color:#6c757d;font-size:1rem;margin:0;">Aucun agent pour ce client.</p>
+        <p style="color:#9e9e9e;font-size:0.9rem;margin:0.5rem 0 0 0;">Ajoutez un premier agent pour commencer.</p>
+      </div>
+    <% end %>
+  </div>
+</section>

@@ -1,0 +1,62 @@
+<section class="clients-index admin-dashboard">
+  <header class="dashboard-header">
+    <h1>Clients</h1>
+    <p class="muted">Liste des clients enregistrés</p>
+  </header>
+
+  <div class="index-actions" style="display:flex;gap:0.75rem;align-items:center;margin:1.5rem 0;flex-wrap:wrap;">
+    <a class="btn btn-primary" href="<%= new_admin_client_path%>" style="background:linear-gradient(135deg, var(--green-700) 0%, var(--green-600) 100%);color:#fff;padding:0.65rem 1.25rem;border-radius:8px;text-decoration:none;font-weight:500;box-shadow:0 2px 8px rgba(0,128,0,0.2);transition:all 0.3s ease;display:inline-flex;align-items:center;gap:0.5rem;">
+      <span style="font-size:1.1rem;">+</span> Nouveau client
+    </a>
+    <form action="" method="get" style="margin-left:auto;flex:1;max-width:350px;">
+      <input name="q" placeholder="Rechercher un client..." class="search-input" style="width:100%;padding:0.65rem 1rem;border-radius:8px;border:1px solid #e0e0e0;transition:all 0.3s ease;box-shadow:0 1px 3px rgba(0,0,0,0.05);" onfocus="this.style.borderColor='var(--green-600)';this.style.boxShadow='0 0 0 3px rgba(0,128,0,0.1)'" onblur="this.style.borderColor='#e0e0e0';this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'" />
+    </form>
+  </div>
+
+  <% clients = defined?(@clients) ? @clients : Client.all %>
+
+  <% if clients.present? %>
+    <div class="table-responsive" style="background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,0.08);overflow:hidden;">
+      <table class="clients-table recent-table" style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr style="background:linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);border-bottom:2px solid #dee2e6;">
+            <th style="padding:1rem 1.25rem;text-align:left;font-weight:600;color:#495057;font-size:0.875rem;text-transform:uppercase;letter-spacing:0.5px;">Nom</th>
+            <th style="padding:1rem 1.25rem;text-align:left;font-weight:600;color:#495057;font-size:0.875rem;text-transform:uppercase;letter-spacing:0.5px;">Adresse</th>
+            <th style="padding:1rem 1.25rem;text-align:left;font-weight:600;color:#495057;font-size:0.875rem;text-transform:uppercase;letter-spacing:0.5px;">Budget alloué</th>
+            <th style="padding:1rem 1.25rem;text-align:left;font-weight:600;color:#495057;font-size:0.875rem;text-transform:uppercase;letter-spacing:0.5px;">Agents</th>
+            <th style="padding:1rem 1.25rem;text-align:left;font-weight:600;color:#495057;font-size:0.875rem;text-transform:uppercase;letter-spacing:0.5px;">Créé le</th>
+            <th style="padding:1rem 1.25rem;text-align:right;font-weight:600;color:#495057;font-size:0.875rem;text-transform:uppercase;letter-spacing:0.5px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% clients.each do |c| %>
+            <tr style="border-bottom:1px solid #f0f0f0;transition:all 0.2s ease;" onmouseover="this.style.backgroundColor='#f8fdf9'" onmouseout="this.style.backgroundColor='transparent'">
+              <td style="padding:1rem 1.25rem;color:#212529;font-weight:500;"><%= (c.nom || c.name || '-') %></td>
+              <td style="padding:1rem 1.25rem;color:#6c757d;font-size:0.9rem;"><%= (c.adresse || '-') %></td>
+              <td style="padding:1rem 1.25rem;color:#212529;font-weight:500;"><%= number_to_currency(c.budget_total_alloue || 0, unit: "€") %></td>
+              <td style="padding:1rem 1.25rem;">
+                <span style="background:#e8f5e9;color:var(--green-700);padding:0.25rem 0.75rem;border-radius:12px;font-size:0.85rem;font-weight:500;"><%= (c.respond_to?(:agents) ? c.agents.count : '-') %></span>
+              </td>
+              <td style="padding:1rem 1.25rem;color:#6c757d;font-size:0.9rem;"><%= (c.created_at && l(c.created_at, format: :short)) rescue (c.created_at || '-') %></td>
+              <td class="actions" style="padding:1rem 1.25rem;text-align:right;">
+                <div style="display:inline-flex;gap:0.5rem;align-items:center;">
+                  <a class="btn" href="/admin/clients/<%= c.id %>" style="color:var(--green-700);text-decoration:none;padding:0.4rem 0.75rem;border-radius:6px;font-size:0.875rem;font-weight:500;transition:all 0.2s ease;" onmouseover="this.style.backgroundColor='#e8f5e9'" onmouseout="this.style.backgroundColor='transparent'">Voir</a>
+                  <a class="btn" href="<%= edit_admin_client_path(id:c.id) %>" style="color:#0066cc;text-decoration:none;padding:0.4rem 0.75rem;border-radius:6px;font-size:0.875rem;font-weight:500;transition:all 0.2s ease;" onmouseover="this.style.backgroundColor='#e3f2fd'" onmouseout="this.style.backgroundColor='transparent'">Éditer</a>
+                  <form action="<%= admin_client_path(id:c.id) %>" method="post" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce client ?')">
+                    <input type="hidden" name="_method" value="delete" />
+                    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>" />
+                    <button class="btn" type="submit" style="color:#d32f2f;background:none;border:0;cursor:pointer;padding:0.4rem 0.75rem;border-radius:6px;font-size:0.875rem;font-weight:500;transition:all 0.2s ease;" onmouseover="this.style.backgroundColor='#ffebee'" onmouseout="this.style.backgroundColor='transparent'">Suppr</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div style="background:#fff;border-radius:12px;padding:3rem;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+      <p class="muted" style="color:#9e9e9e;font-size:1rem;margin:0;">Aucun client trouvé.</p>
+    </div>
+  <% end %>
+</section>

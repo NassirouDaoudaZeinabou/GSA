@@ -1,0 +1,204 @@
+<section class="agent-show admin-dashboard">
+  <header class="dashboard-header">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem">
+      <div>
+        <h1 style="margin:0 0 0.25rem 0">
+          <%= @agent.nom.presence || 'Agent' %> <%= @agent.prenom %>
+        </h1>
+        <p class="muted" style="margin:0">Matricule : <%= @agent.matricule.presence || '-' %></p>
+      </div>
+      <a href="<%= admin_client_path(@agent.client) rescue admin_clients_path %>" 
+         style="color:var(--green-700);text-decoration:none;font-weight:500">
+        ← Retour au client
+      </a>
+    </div>
+  </header>
+
+  <!-- Détails de l'agent - Version améliorée -->
+  <div style="margin-top:2rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.5rem">
+    <!-- Carte Informations personnelles -->
+    <div style="background:#fff;padding:1.75rem;border-radius:10px;box-shadow:0 2px 12px rgba(0,0,0,0.06);border-left:4px solid var(--green-700)">
+      <h3 style="margin:0 0 1.25rem 0;font-size:1.1rem;color:rgba(0,0,0,0.85);display:flex;align-items:center;gap:0.5rem">
+        <span style="color:var(--green-700)">👤</span> Informations personnelles
+      </h3>
+      <div style="display:flex;flex-direction:column;gap:1rem">
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span style="color:rgba(0,0,0,0.5);font-size:0.875rem">Nom</span>
+          <strong style="color:rgba(0,0,0,0.85);font-size:1rem"><%= @agent.nom.presence || '-' %></strong>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span style="color:rgba(0,0,0,0.5);font-size:0.875rem">Prénom</span>
+          <strong style="color:rgba(0,0,0,0.85);font-size:1rem"><%= @agent.prenom.presence || '-' %></strong>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span style="color:rgba(0,0,0,0.5);font-size:0.875rem">Matricule</span>
+          <strong style="color:rgba(0,0,0,0.85);font-size:1rem;font-family:monospace"><%= @agent.matricule.presence || '-' %></strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carte Budget -->
+    <div style="background:linear-gradient(135deg, var(--green-700) 0%, var(--green-600) 100%);padding:1.75rem;border-radius:10px;box-shadow:0 4px 16px rgba(46,125,50,0.25);color:#fff">
+      <h3 style="margin:0 0 1rem 0;font-size:1.1rem;opacity:0.95;display:flex;align-items:center;gap:0.5rem">
+        <span>💰</span> Budget santé
+      </h3>
+      <div style="font-size:2.5rem;font-weight:700;margin-bottom:0.5rem">
+        <%= number_to_currency(@agent.budget_sante || 0, unit: '', precision: 0) %> €
+      </div>
+      <p style="margin:0;opacity:0.85;font-size:0.875rem">Disponible pour les soins</p>
+    </div>
+
+    <!-- Carte Client -->
+    <% if @agent.client %>
+      <div style="background:#fff;padding:1.75rem;border-radius:10px;box-shadow:0 2px 12px rgba(0,0,0,0.06);border-left:4px solid var(--green-600)">
+        <h3 style="margin:0 0 1.25rem 0;font-size:1.1rem;color:rgba(0,0,0,0.85);display:flex;align-items:center;gap:0.5rem">
+          <span style="color:var(--green-600)">🏢</span> Client rattaché
+        </h3>
+        <div>
+          <%= link_to(@agent.client.nom, admin_client_path(@agent.client), style: "color:var(--green-700);text-decoration:none;font-size:1.25rem;font-weight:600;display:inline-block;padding:0.75rem 1.25rem;background:rgba(46,125,50,0.08);border-radius:8px;transition:all 0.2s") %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Actions -->
+  <div style="margin-top:1.5rem;background:#fff;padding:1.5rem;border-radius:10px;box-shadow:0 2px 12px rgba(0,0,0,0.06);display:flex;gap:1rem;flex-wrap:wrap;align-items:center">
+    <span style="color:rgba(0,0,0,0.6);font-weight:500">Actions :</span>
+    <a href="<%= edit_admin_client_agent_path(@agent.client, @agent) rescue '#' %>" 
+       class="btn btn-primary"
+       style="display:inline-flex;align-items:center;gap:0.5rem">
+      <span>✏️</span> Modifier l'agent
+    </a>
+    <form action="<%= admin_client_agent_path(@agent.client, @agent) rescue '#' %>" 
+          method="post" 
+          style="display:inline;" 
+          onsubmit="return confirm('⚠️ Êtes-vous sûr de vouloir supprimer cet agent ? Cette action est irréversible.');">
+      <input type="hidden" name="_method" value="delete" />
+      <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>" />
+      <button type="submit" 
+              style="background:#fff;color:#d32f2f;border:2px solid #d32f2f;padding:0.6rem 1.25rem;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.9375rem;display:inline-flex;align-items:center;gap:0.5rem;transition:all 0.2s"
+              onmouseover="this.style.background='#d32f2f';this.style.color='#fff'"
+              onmouseout="this.style.background='#fff';this.style.color='#d32f2f'">
+        <span>🗑️</span> Supprimer
+      </button>
+    </form>
+  </div>
+
+  <!-- Section Liens Rapides vers les Entités -->
+  <div style="margin-top:2rem;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,0.08);padding:2rem;">
+    <h2 style="margin:0 0 1.5rem 0;font-size:1.3rem;color:#212529;font-weight:600;padding-bottom:0.75rem;border-bottom:2px solid #e9ecef;">
+      🏥 Entités de santé
+    </h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:1rem;">
+      
+      <!-- Pharmacies -->
+      <a href="" style="text-decoration:none;background:linear-gradient(135deg, #4caf50 0%, #388e3c 100%);color:#fff;padding:1.5rem;border-radius:10px;box-shadow:0 4px 12px rgba(76,175,80,0.3);transition:all 0.3s ease;display:flex;flex-direction:column;align-items:center;gap:0.75rem;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 6px 16px rgba(76,175,80,0.4)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 12px rgba(76,175,80,0.3)'">
+        <div style="font-size:2.5rem;">💊</div>
+        <div style="font-weight:600;font-size:1.05rem;">Pharmacies</div>
+        <div style="font-size:0.85rem;opacity:0.9;">Gérer les pharmacies</div>
+      </a>
+
+      <!-- CSI -->
+      <a href="" style="text-decoration:none;background:linear-gradient(135deg, #2196f3 0%, #1976d2 100%);color:#fff;padding:1.5rem;border-radius:10px;box-shadow:0 4px 12px rgba(33,150,243,0.3);transition:all 0.3s ease;display:flex;flex-direction:column;align-items:center;gap:0.75rem;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 6px 16px rgba(33,150,243,0.4)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 12px rgba(33,150,243,0.3)'">
+        <div style="font-size:2.5rem;">🏢</div>
+        <div style="font-weight:600;font-size:1.05rem;">CSI</div>
+        <div style="font-size:0.85rem;opacity:0.9;">Centres de santé intégrés</div>
+      </a>
+
+      <!-- Cliniques -->
+      <a href="" style="text-decoration:none;background:linear-gradient(135deg, #ff9800 0%, #f57c00 100%);color:#fff;padding:1.5rem;border-radius:10px;box-shadow:0 4px 12px rgba(255,152,0,0.3);transition:all 0.3s ease;display:flex;flex-direction:column;align-items:center;gap:0.75rem;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 6px 16px rgba(255,152,0,0.4)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 12px rgba(255,152,0,0.3)'">
+        <div style="font-size:2.5rem;">🏥</div>
+        <div style="font-weight:600;font-size:1.05rem;">Cliniques</div>
+        <div style="font-size:0.85rem;opacity:0.9;">Gérer les cliniques</div>
+      </a>
+
+      <!-- Hôpitaux -->
+      <a href="" style="text-decoration:none;background:linear-gradient(135deg, #e91e63 0%, #c2185b 100%);color:#fff;padding:1.5rem;border-radius:10px;box-shadow:0 4px 12px rgba(233,30,99,0.3);transition:all 0.3s ease;display:flex;flex-direction:column;align-items:center;gap:0.75rem;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 6px 16px rgba(233,30,99,0.4)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 12px rgba(233,30,99,0.3)'">
+        <div style="font-size:2.5rem;">🏨</div>
+        <div style="font-weight:600;font-size:1.05rem;">Hôpitaux</div>
+        <div style="font-size:0.85rem;opacity:0.9;">Gérer les hôpitaux</div>
+      </a>
+
+      <!-- Cabinets -->
+      <a href="" style="text-decoration:none;background:linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%);color:#fff;padding:1.5rem;border-radius:10px;box-shadow:0 4px 12px rgba(156,39,176,0.3);transition:all 0.3s ease;display:flex;flex-direction:column;align-items:center;gap:0.75rem;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 6px 16px rgba(156,39,176,0.4)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 12px rgba(156,39,176,0.3)'">
+        <div style="font-size:2.5rem;">👨‍⚕️</div>
+        <div style="font-weight:600;font-size:1.05rem;">Cabinets</div>
+        <div style="font-size:0.85rem;opacity:0.9;">Cabinets médicaux</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- Section Sous-clients -->
+  <section style="margin-top:3rem">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem">
+      <h2 style="margin:0;font-size:1.5rem;display:flex;align-items:center;gap:0.75rem">
+        <span style="background:var(--green-700);color:#fff;padding:0.25rem 0.75rem;border-radius:20px;font-size:0.875rem;font-weight:600">
+          <%= @agent.sous_clients.count %>
+        </span>
+        Sous-clients
+      </h2>
+      <a href="<%= new_admin_client_agent_sous_client_path(@agent.client, @agent) %>" 
+         class="btn btn-primary"
+         style="display:inline-flex;align-items:center;gap:0.5rem">
+        <span style="font-size:1.25rem">+</span> Ajouter un sous-client
+      </a>
+    </div>
+    
+    <% if @agent.sous_clients.any? %>
+      <div style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
+        <table style="width:100%;border-collapse:collapse">
+          <thead>
+            <tr style="background:linear-gradient(to right, rgba(46,125,50,0.08), rgba(46,125,50,0.04));border-bottom:2px solid var(--green-700)">
+              <th style="padding:1rem;text-align:left;font-weight:600;color:rgba(0,0,0,0.75)">Nom</th>
+              <th style="padding:1rem;text-align:left;font-weight:600;color:rgba(0,0,0,0.75)">Prénom</th>
+              <th style="padding:1rem;text-align:left;font-weight:600;color:rgba(0,0,0,0.75)">Relation</th>
+              <th style="padding:1rem;text-align:right;font-weight:600;color:rgba(0,0,0,0.75)">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @agent.sous_clients.order(:nom).each do |sc| %>
+              <tr style="border-bottom:1px solid #f0f0f0;transition:all 0.2s"
+                  onmouseover="this.style.background='rgba(46,125,50,0.03)'"
+                  onmouseout="this.style.background='transparent'">
+                <td style="padding:1rem;font-weight:500"><%= sc.nom.presence || '-' %></td>
+                <td style="padding:1rem"><%= sc.prenom.presence || '-' %></td>
+                <td style="padding:1rem">
+                  <span style="background:rgba(46,125,50,0.1);color:var(--green-700);padding:0.25rem 0.75rem;border-radius:12px;font-size:0.875rem;font-weight:500">
+                    <%= sc.relation.presence || '-' %>
+                  </span>
+                </td>
+                <td style="padding:1rem;text-align:right">
+                  <a href="<%= admin_client_agent_sous_client_path(@agent.client, @agent, sc) %>" 
+                     style="color:var(--green-700);text-decoration:none;margin-right:1rem;font-weight:500;font-size:0.9rem">
+                    Voir
+                  </a>
+                  <a href="<%= edit_admin_client_agent_sous_client_path(@agent.client, @agent, sc) %>" 
+                     style="color:var(--green-600);text-decoration:none;margin-right:1rem;font-weight:500;font-size:0.9rem">
+                    Éditer
+                  </a>
+                  <form action="<%= admin_client_agent_sous_client_path(@agent.client, @agent, sc) %>" 
+                        method="post" 
+                        style="display:inline;" 
+                        onsubmit="return confirm('Supprimer ce sous-client ?');">
+                    <input type="hidden" name="_method" value="delete" />
+                    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>" />
+                    <button type="submit" 
+                            style="background:none;border:0;color:#d32f2f;cursor:pointer;padding:0;font-weight:500;font-size:0.9rem">
+                      Supprimer
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <div style="background:#fff;padding:4rem 2rem;text-align:center;border-radius:10px;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
+        <div style="font-size:3rem;margin-bottom:1rem;opacity:0.3">👥</div>
+        <p style="color:rgba(0,0,0,0.4);margin:0;font-size:1.1rem">Aucun sous-client enregistré</p>
+        <p style="color:rgba(0,0,0,0.3);margin:0.5rem 0 0 0;font-size:0.9rem">Ajoutez un premier sous-client pour commencer</p>
+      </div>
+    <% end %>
+  </section>
+</section>

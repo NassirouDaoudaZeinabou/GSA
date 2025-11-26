@@ -1,0 +1,38 @@
+<% client = local_assigns[:client] || @client %>
+
+<% if client.nil? %>
+	<p class="muted">Aucun client fourni au formulaire.</p>
+<% else %>
+	<% if client.errors.any? %>
+		<div class="form-errors">
+			<p><strong><%= pluralize(client.errors.count, "erreur") %> empêche la sauvegarde :</strong></p>
+			<ul>
+				<% client.errors.full_messages.each do |m| %>
+					<li><%= m %></li>
+				<% end %>
+			</ul>
+		</div>
+	<% end %>
+
+	<%= form_with(model: [:admin, client], local: true, html: { class: 'client-form' }) do |f| %>
+		<div class="form-row">
+			<%= f.label :nom, 'Nom', class: 'form-label' %>
+			<%= f.text_field :nom, class: 'form-input', placeholder: 'Nom du client' %>
+		</div>
+
+		<div class="form-row">
+			<%= f.label :adresse, 'Adresse', class: 'form-label' %>
+			<%= f.text_field :adresse, class: 'form-input', placeholder: 'Adresse du client' %>
+		</div>
+
+		<div class="form-row">
+			<%= f.label :budget_total_alloue, 'Budget total alloué', class: 'form-label' %>
+			<%= f.number_field :budget_total_alloue, step: '0.01', class: 'form-input', placeholder: '0.00' %>
+		</div>
+
+		<div class="form-actions">
+			<%= f.submit (client.persisted? ? 'Mettre à jour' : 'Créer'), class: 'btn btn-primary' %>
+			<a href="/admin/clients" class="btn btn-secondary">Annuler</a>
+		</div>
+	<% end %>
+<% end %>

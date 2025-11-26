@@ -1,0 +1,24 @@
+<section class="sous-client-show admin-dashboard">
+  <header class="dashboard-header">
+    <h1><%= @sous_client.nom.presence || 'Sous-client' %> <small style="font-weight:400;color:rgba(0,0,0,0.6);">(<%= @sous_client.prenom %>)</small></h1>
+    <p class="muted">Détail du sous-client</p>
+  </header>
+
+  <div style="margin-top:1rem">
+    <div style="background:#fff;padding:1rem;border-radius:8px;box-shadow:0 6px 20px rgba(46,125,50,0.04)">
+      <p><strong>Nom :</strong> <%= @sous_client.nom.presence || '-' %></p>
+      <p><strong>Prénom :</strong> <%= @sous_client.prenom.presence || '-' %></p>
+      <p><strong>Relation :</strong> <%= @sous_client.relation.presence || '-' %></p>
+      <p><strong>Agent :</strong> <%= link_to @agent.nom, admin_client_agent_path(@agent.client, @agent) if @agent %></p>
+      <div style="margin-top:.75rem;display:flex;gap:.5rem">
+        <a href="<%= edit_admin_client_agent_sous_client_path(@agent.client, @agent, @sous_client) rescue '#' %>" class="btn btn-primary">Éditer</a>
+        <form action="<%= admin_client_agent_sous_client_path(@agent.client, @agent, @sous_client) rescue '#' %>" method="post" style="display:inline;" onsubmit="return confirm('Supprimer ce sous-client ?');">
+          <input type="hidden" name="_method" value="delete" />
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>" />
+          <button type="submit" class="btn btn-secondary" style="background:transparent;color:#b71c1c;border:0;padding:.45rem .7rem;border-radius:6px;">Supprimer</button>
+        </form>
+        <a href="<%= admin_client_agent_path(@agent.client, @agent) rescue admin_clients_path %>" style="margin-left:auto;color:var(--green-700);">Retour</a>
+      </div>
+    </div>
+  </div>
+</section>
