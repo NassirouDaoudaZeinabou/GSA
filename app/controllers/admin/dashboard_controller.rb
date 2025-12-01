@@ -1,4 +1,7 @@
 class Admin::DashboardController < ApplicationController
+    before_action :authenticate_user!
+  # before_action :authorize_admin!
+   
    
     def index
         @clients_count        = Client.count
@@ -11,4 +14,7 @@ class Admin::DashboardController < ApplicationController
         @total_depenses       = Transaction.sum(:montant)
         @recent_transactions  = Transaction.order(created_at: :desc).limit(5)
     end
+    #  def authorize_admin!
+    #        redirect_to root_path, alert: "Accès refusé" unless current_user&.admin?
+    # end
 end

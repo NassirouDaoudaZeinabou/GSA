@@ -1,4 +1,6 @@
 class Admin::AgentsController < ApplicationController
+   before_action :authenticate_user!
+   before_action :authorize_admin!
     before_action :set_client, only: %i[new create]
     before_action :set_agent, only: %i[show edit update destroy]
 
@@ -49,5 +51,8 @@ class Admin::AgentsController < ApplicationController
 
     def agent_params
         params.require(:agent).permit(:nom, :prenom, :matricule, :budget_sante, :client_id)
+    end
+     def authorize_admin!
+           redirect_to root_path, alert: "Accès refusé" unless current_user&.admin?
     end
 end

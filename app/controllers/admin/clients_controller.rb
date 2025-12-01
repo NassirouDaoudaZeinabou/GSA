@@ -1,4 +1,7 @@
 class Admin::ClientsController < ApplicationController
+    before_action :authenticate_user!
+   #before_action :authorize_admin!
+   
       before_action :set_client, only: [:show, :edit, :update, :destroy]
 
     def index
@@ -46,4 +49,7 @@ class Admin::ClientsController < ApplicationController
     def set_client
         @client= Client.find(params[:id])
     end
+    #  def authorize_admin!
+    #        redirect_to root_path, alert: "Accès refusé" unless current_user&.admin?
+    # end
 end

@@ -72,13 +72,17 @@
 
 /* Move main content to the right so fixed sidebar doesn't overlap it */
 .main-content {
-	margin-left: 280px; /* match sidebar width */
+	margin-left: 0;
 	transition: margin-left 200ms ease;
 	padding: 1rem;
 }
 
+.main-content.with-sidebar {
+	margin-left: 280px; /* match sidebar width */
+}
+
 @media (max-width: 900px) {
-	.main-content { margin-left: 0; }
+	.main-content.with-sidebar { margin-left: 0; }
 }
 
 /* Keep legacy rules last to avoid accidental overrides */
