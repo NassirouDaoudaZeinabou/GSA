@@ -22,9 +22,20 @@
   </head>
 
   <body>
-    <%= render 'shared/sidebar' %>
+    <header class="app-topbar" style="display:flex;align-items:center;padding:.5rem 1rem;background:#fff;border-bottom:1px solid #eee;">
+      <div style="flex:1">
+        <a href="/" style="text-decoration:none;color:var(--green-700);font-weight:700">GSA</a>
+      </div>
+      
+    </header>
 
-    <main class="main-content" role="main">
+    <%# Render sidebar only for admin namespace pages %>
+    <% sidebar_present = controller_path.start_with?('admin/') %>
+    <% if sidebar_present %>
+      <%= render 'shared/sidebar' %>
+    <% end %>
+
+    <main class="main-content <%= 'with-sidebar' if sidebar_present %>" role="main">
       <%= yield %>
     </main>
   </body>

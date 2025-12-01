@@ -1,0 +1,483 @@
+<section class="inscription-page">
+	<div class="login-link-container">
+		<p class="login-prompt">Administrateur ?</p>
+		<%= link_to 'Se connecter', new_user_session_path, class: 'login-link' %>
+	</div>
+
+	<div class="container">
+		<header class="page-header">
+			<div class="header-icon">
+				<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+					<circle cx="9" cy="7" r="4"></circle>
+					<path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+					<path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+				</svg>
+			</div>
+			<h1>Inscription client</h1>
+			<p class="subtitle">Remplissez le formulaire ci-dessous pour ajouter un nouveau client. Cette page est publique.</p>
+		</header>
+
+		<%= form_with model: @client, url: inscription_path, local: true, class: 'client-form' do |f| %>
+			<% if @client.errors.any? %>
+				<div class="alert alert-error">
+					<div class="alert-icon">⚠️</div>
+					<div class="alert-content">
+						<h4><%= pluralize(@client.errors.count, "erreur") %> empêche l'enregistrement :</h4>
+						<ul>
+							<% @client.errors.full_messages.each do |message| %>
+								<li><%= message %></li>
+							<% end %>
+						</ul>
+					</div>
+				</div>
+			<% end %>
+
+			<div class="form-group">
+				<%= f.label :nom, class: 'form-label' do %>
+					<span class="label-text">Nom du client</span>
+					<span class="required-badge">Requis</span>
+				<% end %>
+				<%= f.text_field :nom, 
+					class: 'form-control', 
+					placeholder: 'Ex: Entreprise SARL',
+					required: true,
+					aria: { describedby: 'nom-help' } %>
+				<small id="nom-help" class="form-text">Le nom complet du client ou de l'entreprise</small>
+			</div>
+
+			<div class="form-group">
+				<%= f.label :adresse, class: 'form-label' do %>
+					<span class="label-text">Adresse complète</span>
+					<span class="required-badge">Requis</span>
+				<% end %>
+				<%= f.text_area :adresse, 
+					class: 'form-control', 
+					rows: 3,
+					placeholder: 'Ex: 123 Rue de la République, 75001 Paris',
+					required: true,
+					aria: { describedby: 'adresse-help' } %>
+				<small id="adresse-help" class="form-text">Adresse postale complète incluant code postal et ville</small>
+			</div>
+
+			<div class="form-group">
+				<%= f.label :budget_total_alloue, class: 'form-label' do %>
+					<span class="label-text">Budget total alloué</span>
+					<span class="required-badge">Requis</span>
+				<% end %>
+				<div class="input-group">
+					<span class="input-prefix">€</span>
+					<%= f.number_field :budget_total_alloue, 
+						step: '0.01', 
+						min: '0',
+						class: 'form-control has-prefix', 
+						placeholder: '0.00',
+						required: true,
+						aria: { describedby: 'budget-help' } %>
+				</div>
+				<small id="budget-help" class="form-text">Montant en euros (ex: 5000.00)</small>
+			</div>
+
+			<div class="form-actions">
+				<%= f.submit 'Enregistrer le client', class: 'btn btn-primary' %>
+				<%= link_to root_path, class: 'btn btn-secondary' do %>
+					<span>Annuler</span>
+				<% end %>
+			</div>
+		<% end %>
+	</div>
+</section>
+
+<style>
+	.inscription-page {
+		min-height: 100vh;
+		background: linear-gradient(135deg, #d4f1e8 0%, #a7e3d0 50%, #6ee7b7 100%);
+		padding: 2rem 1rem;
+		position: relative;
+	}
+
+	.inscription-page::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-image: 
+			radial-gradient(circle at 20% 30%, rgba(16, 185, 129, 0.08) 0%, transparent 50%),
+			radial-gradient(circle at 80% 70%, rgba(5, 150, 105, 0.08) 0%, transparent 50%);
+		pointer-events: none;
+	}
+
+	.login-link-container {
+		position: absolute;
+		top: 2rem;
+		right: 2rem;
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		z-index: 10;
+	}
+
+	.login-prompt {
+		margin: 0;
+		color: #047857;
+		font-size: 0.95rem;
+		font-weight: 500;
+	}
+
+	.login-link {
+		padding: 0.65rem 1.5rem;
+		background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+		color: white;
+		text-decoration: none;
+		border-radius: 8px;
+		font-weight: 600;
+		font-size: 0.9rem;
+		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+		box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.login-link:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+	}
+
+	.login-link:active {
+		transform: translateY(0);
+	}
+
+	.container {
+		max-width: 680px;
+		margin: 0 auto;
+		background: white;
+		border-radius: 16px;
+		box-shadow: 
+			0 4px 6px rgba(5, 150, 105, 0.05),
+			0 10px 30px rgba(16, 185, 129, 0.1),
+			0 0 0 1px rgba(16, 185, 129, 0.08);
+		padding: 2.5rem;
+		position: relative;
+		backdrop-filter: blur(10px);
+	}
+
+	.page-header {
+		margin-bottom: 2rem;
+		border-bottom: 2px solid #d1fae5;
+		padding-bottom: 1.5rem;
+		text-align: center;
+	}
+
+	.header-icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 64px;
+		height: 64px;
+		background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+		border-radius: 16px;
+		color: white;
+		margin-bottom: 1rem;
+		box-shadow: 0 8px 16px rgba(16, 185, 129, 0.25);
+	}
+
+	.page-header h1 {
+		font-size: 2rem;
+		font-weight: 700;
+		background: linear-gradient(135deg, #059669 0%, #047857 100%);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+		margin: 0 0 0.5rem 0;
+	}
+
+	.subtitle {
+		color: #6b7280;
+		font-size: 0.95rem;
+		margin: 0;
+		line-height: 1.6;
+	}
+
+	.client-form {
+		display: flex;
+		flex-direction: column;
+		gap: 1.75rem;
+	}
+
+	.form-group {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.form-label {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.5rem;
+	}
+
+	.label-text {
+		font-weight: 600;
+		color: #047857;
+		font-size: 0.9rem;
+		letter-spacing: 0.01em;
+	}
+
+	.required-badge {
+		display: inline-block;
+		background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+		color: #047857;
+		font-size: 0.7rem;
+		font-weight: 700;
+		padding: 0.25rem 0.5rem;
+		border-radius: 6px;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+	}
+
+	.form-control {
+		width: 100%;
+		padding: 0.875rem 1rem;
+		font-size: 1rem;
+		border: 2px solid #d1fae5;
+		border-radius: 10px;
+		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+		font-family: inherit;
+		background: #f9fafb;
+	}
+
+	.form-control:hover {
+		border-color: #a7f3d0;
+		background: white;
+	}
+
+	.form-control:focus {
+		outline: none;
+		border-color: #10b981;
+		background: white;
+		box-shadow: 
+			0 0 0 4px rgba(16, 185, 129, 0.1),
+			0 4px 12px rgba(16, 185, 129, 0.15);
+		transform: translateY(-1px);
+	}
+
+	.form-control::placeholder {
+		color: #9ca3af;
+	}
+
+	.input-group {
+		display: flex;
+		align-items: center;
+		position: relative;
+	}
+
+	.input-prefix {
+		position: absolute;
+		left: 1rem;
+		color: #059669;
+		font-weight: 700;
+		font-size: 1.1rem;
+		pointer-events: none;
+		z-index: 1;
+	}
+
+	.form-control.has-prefix {
+		padding-left: 2.5rem;
+	}
+
+	.form-text {
+		color: #6b7280;
+		font-size: 0.85rem;
+		margin-top: 0.25rem;
+		display: flex;
+		align-items: center;
+		gap: 0.25rem;
+	}
+
+	.form-text::before {
+		content: 'ℹ️';
+		font-size: 0.75rem;
+	}
+
+	.alert {
+		padding: 1.25rem;
+		border-radius: 12px;
+		margin-bottom: 1.5rem;
+		display: flex;
+		gap: 1rem;
+		align-items: flex-start;
+	}
+
+	.alert-error {
+		background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+		border: 2px solid #fca5a5;
+	}
+
+	.alert-icon {
+		font-size: 1.5rem;
+		flex-shrink: 0;
+	}
+
+	.alert-content {
+		flex: 1;
+	}
+
+	.alert h4 {
+		margin: 0 0 0.5rem 0;
+		font-size: 0.95rem;
+		font-weight: 600;
+		color: #991b1b;
+	}
+
+	.alert ul {
+		margin: 0;
+		padding-left: 1.25rem;
+	}
+
+	.alert li {
+		font-size: 0.9rem;
+		color: #dc2626;
+		margin-bottom: 0.25rem;
+	}
+
+	.form-actions {
+		display: flex;
+		gap: 0.75rem;
+		margin-top: 1rem;
+		padding-top: 1.5rem;
+		border-top: 2px solid #d1fae5;
+	}
+
+	.btn {
+		flex: 1;
+		padding: 0.875rem 1.5rem;
+		font-size: 1rem;
+		font-weight: 600;
+		border-radius: 10px;
+		border: none;
+		cursor: pointer;
+		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+		text-decoration: none;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+		text-align: center;
+	}
+
+	.btn-primary {
+		background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+		color: white;
+		box-shadow: 
+			0 4px 12px rgba(16, 185, 129, 0.3),
+			0 2px 4px rgba(5, 150, 105, 0.2);
+		position: relative;
+		overflow: hidden;
+	}
+
+	.btn-primary::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 100%);
+		opacity: 0;
+		transition: opacity 0.3s ease;
+	}
+
+	.btn-primary:hover {
+		transform: translateY(-2px);
+		box-shadow: 
+			0 8px 20px rgba(16, 185, 129, 0.4),
+			0 4px 8px rgba(5, 150, 105, 0.3);
+	}
+
+	.btn-primary:hover::before {
+		opacity: 1;
+	}
+
+	.btn-primary:active {
+		transform: translateY(0);
+	}
+
+	.btn-secondary {
+		background: white;
+		color: #059669;
+		border: 2px solid #d1fae5;
+		box-shadow: 0 2px 4px rgba(16, 185, 129, 0.08);
+	}
+
+	.btn-secondary:hover {
+		background: #ecfdf5;
+		border-color: #a7f3d0;
+		transform: translateY(-2px);
+		box-shadow: 0 4px 8px rgba(16, 185, 129, 0.15);
+	}
+
+	.btn-secondary:active {
+		transform: translateY(0);
+	}
+
+	@media (max-width: 640px) {
+		.container {
+			padding: 1.5rem;
+		}
+
+		.page-header h1 {
+			font-size: 1.5rem;
+		}
+
+		.header-icon {
+			width: 56px;
+			height: 56px;
+		}
+
+		.form-actions {
+			flex-direction: column;
+		}
+
+		.btn {
+			width: 100%;
+		}
+
+		.login-link-container {
+			position: static;
+			top: auto;
+			right: auto;
+			margin-bottom: 1.5rem;
+			flex-direction: column;
+			gap: 0.5rem;
+			text-align: center;
+		}
+
+		.login-prompt {
+			font-size: 0.85rem;
+		}
+
+		.login-link {
+			width: 100%;
+		}
+	}
+
+	/* Animation d'entrée */
+	@keyframes slideIn {
+		from {
+			opacity: 0;
+			transform: translateY(20px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	.container {
+		animation: slideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+</style>

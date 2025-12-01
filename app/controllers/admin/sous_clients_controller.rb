@@ -1,4 +1,7 @@
 class Admin::SousClientsController < ApplicationController
+  before_action :authenticate_user!
+  # before_action :authorize_admin!
+   
   before_action :set_agent
   before_action :set_sous_client, only: %i[show edit update destroy]
 
@@ -48,6 +51,7 @@ class Admin::SousClientsController < ApplicationController
     params.require(:sous_client).permit(:nom, :prenom, :relation)
   end
 end
-class Admin::SousClientsController < ApplicationController
-    
-end
+#  def authorize_admin!
+#            redirect_to root_path, alert: "Accès refusé" unless current_user&.admin?
+#   end
+
